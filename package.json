@@ -10,7 +10,7 @@
     "mp": "DEBUG=ws:mp* node second/task.js",
     "test": "mocha --recursive --exit --timeout 10000"
   },
-  "author": "liqiang",
+  "author": "tangc",
   "license": "MIT",
   "dependencies": {
     "anyproxy": "^4.0.5",
@@ -35,14 +35,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lqqyt2423/wechat_spider.git"
+    "url": "git+https://github.com/Ttangc/wechat.git"
   },
   "keywords": [
     "wechat",
     "spider"
   ],
   "bugs": {
-    "url": "https://github.com/lqqyt2423/wechat_spider/issues"
+    "url": "https://github.com/Ttangc/wechat/issues"
   },
-  "homepage": "https://github.com/lqqyt2423/wechat_spider#readme"
+  "homepage": "https://github.com/Ttangc/wechat#readme"
 }
