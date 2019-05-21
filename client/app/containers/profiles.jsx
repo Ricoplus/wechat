@@ -1,16 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchProfiles } from '../actions';
+import { fetchProfiles, showMessage, addProfile, deleteProfile } from '../actions';
 import Loading from '../components/loading.jsx';
 import moment from 'moment';
+import RaisedButton from 'material-ui/RaisedButton';
 import Paginator from '../components/paginator.jsx';
 import { Link } from 'react-router';
 import Search from './search.jsx';
+
+// 新建的内容
+const addContent = JSON.stringify({
+  title: 'title',
+  wechatId: 'wechatId',
+  desc: 'desc',
+  msgBiz: 'msgBiz',
+  headimg: 'headimg',
+}, null, 2);
 
 class Profiles extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      // 是否显示新建的操作框
+      showAddDiv: false,
+      // 新建的内容
+      addContent: addContent,
+    };
+	this.onAddSubmit = this.onAddSubmit.bind(this);
     this.returnCurrentSearchArgs = this.returnCurrentSearchArgs.bind(this);
   }
 
@@ -38,7 +55,69 @@ class Profiles extends React.Component {
     });
     return searchArgs;
   }
+  // 删除
+  async deleteProfile(id) {
+    const { dispatch } = this.props;
+    await dispatch(deleteProfile(id));
+    setTimeout(() => { location.reload(); }, 300); // 手动刷新页面
+  }
 
+  // 新建提交
+  async onAddSubmit() {
+    const { addContent } = this.state;
+    const { dispatch } = this.props;
+    let doc;
+    try {
+      doc = JSON.parse(addContent);
+    } catch (e) {
+      dispatch(showMessage('输入解析错误，请检查'));
+      return;
+    }
+    await dispatch(addProfile(doc));
+    setTimeout(() => { location.reload(); }, 300); // 手动刷新页面
+  }
+
+  // 新建
+  renderAdd() {
+    const { showAddDiv, addContent } = this.state;
+    if (!showAddDiv) return null;
+
+    const style = {
+      position: 'fixed',
+      top: '50%',
+      left: '50%',
+      width: '500px',
+      height: '250px',
+      margin: '-125px 0 0 -250px',
+      padding: '20px',
+      background: '#f9f9f9',
+      zIndex: 999,
+    };
+    return (
+      <div style={style}>
+        <textarea
+          style={{
+            width: '100%',
+            height: '160px',
+            padding: '5px',
+            fontFamily: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier',
+            outline: 'none',
+            wordBreak: 'break-all',
+          }}
+          value={addContent}
+          onChange={event => {
+            this.setState({ addContent: event.target.value });
+          }}
+        />
+        <RaisedButton
+          style={{ marginTop: '10px' }}
+          primary={true}
+          label="提交"
+          onClick={this.onAddSubmit}
+        />
+      </div>
+    );
+  }
   render() {
     let { isFetching, profiles, history, location } = this.props;
     let { search, pathname } = location;
@@ -46,6 +125,13 @@ class Profiles extends React.Component {
     let metadata = profiles.metadata;
     return (
       <div>
+		{this.renderAdd()}
+        <RaisedButton
+          label="新建公众号"
+          onClick={() => {
+            this.setState({ showAddDiv: true });
+          }}
+        />
         <Search
           location={location}
           history={history}
@@ -66,6 +152,7 @@ class Profiles extends React.Component {
               <th>差</th>
               <th>MsgBiz</th>
               <th>详情</th>
+			  <th>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -84,6 +171,17 @@ class Profiles extends React.Component {
                     <td>{profile.postsAllCount - profile.postsHasDataCount}</td>
                     <td>{profile.msgBiz}</td>
                     <td><Link to={`/profiles/${profile.id}`}>详情</Link></td>
+                    <td>
+                      <span
+                        onClick={() => { this.deleteProfile(profile.id); }}
+                        style={{
+                          cursor: 'pointer',
+                          color: '#337ab7'
+                        }}
+                      >
+                        删除
+                      </span>
+                    </td> 
                   </tr>
                 );
               })

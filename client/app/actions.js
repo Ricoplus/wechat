@@ -208,6 +208,42 @@ export async function updateProfile(id, doc) {
   return res;
 }
 
+// delete profile
+export function deleteProfile(id) {
+  return async dispatch => {
+    const res = await fetch(`${config.profile}/${id}`, {
+      method: 'DELETE',
+    });
+    if (res.status === 500) {
+      const message = await res.text();
+      dispatch(showMessage(`错误：${message}`));
+      return;
+    }
+    const body = await res.json();
+    const { state, message } = body;
+    if (state === 1) dispatch(showMessage(`成功：${message}`));
+  };
+}
+
+// add profile
+export function addProfile(doc) {
+  return async dispatch => {
+    let res = await fetch(`${config.profile}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(doc),
+    });
+    if (res.status === 500) {
+      const message = await res.text();
+      dispatch(showMessage(`错误：${message}`));
+      return;
+    }
+    const body = await res.json();
+    const { state, message } = body;
+    if (state === 1) dispatch(showMessage(`成功：${message}`));
+  };
+}
+
 // update category
 export async function updateCate(id, doc) {
   let res = await fetch(`${config.cate}/${id}`, {

@@ -208,6 +208,37 @@ api.put('/profiles/:id', wrap(async (req, res) => {
   await models.Profile.findByIdAndUpdate(id, doc);
   res.json({ state: 1, message: '更新公众号成功' });
 }));
+// profile delete api
+api.delete('/profiles/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const doc = await models.Profile.findByIdAndRemove(id);
+  if (!doc) throw new Error('不存在此公众号');
+  res.json({ state: 1, message: '删除公众号成功' });
+}));
+
+// profile add api
+api.post('/profiles', wrap(async (req, res) => {
+  // title, msgBiz 必传
+  const {
+    title,
+    wechatId,
+    desc,
+    msgBiz,
+    headimg,
+  } = req.body;
+  if (!title) throw new Error('请传入标题');
+  if (!msgBiz) throw new Error('请传入 msgBiz');
+  let doc = await models.Profile.findOne({ msgBiz });
+  if (doc) throw new Error('已存在此公众号');
+  doc = await models.Profile.create({
+    title,
+    wechatId,
+    desc,
+    msgBiz,
+    headimg,
+  });
+  res.json({ state: 1, message: '创建公众号成功', data: { id: doc.id } });
+}));
 
 // 新建分类
 api.post('/categories', (req, res, next) => {
