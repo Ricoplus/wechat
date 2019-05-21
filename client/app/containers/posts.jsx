@@ -136,6 +136,7 @@ class Posts extends React.Component {
         showTitle = <a title={i.title}>{showTitle}</a>;
       }
       return {
+        id:i.id,
         publishAt: i.publishAt ? moment(i.publishAt).format('YY-MM-DD HH:mm') : '暂无',
         showTitle,
         readNum: i.readNum || '',

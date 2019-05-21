@@ -50,6 +50,7 @@ class App extends React.Component {
             <List>
               <ListItem primaryText="文章" onClick={() => { history.push('/posts'); }} />
               <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
+			  <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
               <ListItem primaryText="配置" onClick={() => { history.push('/conf'); }} />
             </List>
           </Drawer>
