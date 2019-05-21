@@ -136,15 +136,12 @@ class Posts extends React.Component {
         showTitle = <a title={i.title}>{showTitle}</a>;
       }
       return {
-        id: i.id,
         publishAt: i.publishAt ? moment(i.publishAt).format('YY-MM-DD HH:mm') : '暂无',
         showTitle,
-        msgIdx: i.msgIdx || '0',
         readNum: i.readNum || '',
         likeNum: i.likeNum || '',
         updateNumAt: i.updateNumAt ? moment(i.updateNumAt).format('YY-MM-DD HH:mm') : '暂无',
-        updateInterval: (i.updateNumAt && i.publishAt) ? timeDiff(i.updateNumAt, i.publishAt) : '',
-        showProfile: <Link to={`/posts?msgBiz=${i.msgBiz}`}>{i.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={i.profile.headimg} className="img-circle" />{i.profile.title}</span>) : i.msgBiz}</Link>
+        showProfile: i.profile ? (<span><img style={{ height: '24px', marginRight: '3px' }} src={i.profile.headimg} className="img-circle" />{i.profile.title}</span>) : i.msgBiz
       };
     });
 
@@ -160,14 +157,11 @@ class Posts extends React.Component {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>ID</th>
               <th>发布时间 {this.sortByTime('publishAt')}</th>
               <th>文章标题</th>
-              <th>位置</th>
               <th>阅读数</th>
               <th>点赞数</th>
               <th>更新时间 {this.sortByTime('updateNumAt')}</th>
-              <th>间隔</th>
               <th>公众号</th>
               <th>详情</th>
             </tr>
@@ -177,14 +171,11 @@ class Posts extends React.Component {
               showData.map(i => {
                 return (
                   <tr key={i.id}>
-                    <td>{i.id}</td>
                     <td>{i.publishAt}</td>
                     <td>{i.showTitle}</td>
-                    <td>{i.msgIdx}</td>
                     <td>{i.readNum}</td>
                     <td>{i.likeNum}</td>
                     <td>{i.updateNumAt}</td>
-                    <td>{i.updateInterval}</td>
                     <td>{i.showProfile}</td>
                     <td><Link to={`/posts/${i.id}`}>详情</Link></td>
                   </tr>

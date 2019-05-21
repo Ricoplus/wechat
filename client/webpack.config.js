@@ -54,6 +54,8 @@ module.exports = {
     hot: true,
     contentBase: './',
     historyApiFallback: true,
+    disableHostCheck: true,
+    host:"0.0.0.0",
     proxy: {
       '/api': 'http://localhost:8104',
       '/favicon.png': 'http://localhost:8104'
