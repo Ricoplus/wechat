@@ -139,6 +139,8 @@ class Keywords extends React.Component {
           <thead>
             <tr>
               <th>关键词</th>
+              <th>相关文章数量</th>
+              <th>文章</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -148,6 +150,8 @@ class Keywords extends React.Component {
                return( 
                 <tr key={i.id}>
                   <td>{i.name}</td>
+                  <td>{i.articles?i.articles.length:'0'}</td>
+                  <td><Link to={`/posts`}>详情</Link></td>
                   <td>
                       <span
                         onClick={() => { this.deleteKeyword(i.id); }}
