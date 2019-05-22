@@ -265,8 +265,10 @@ api.post('/keywords', wrap(async (req, res) => {
 
 // keywords api
 api.get('/keywords', wrap(async (req, res) => {
-  const { page = 1, perPage = 20 } = req.query;
-  let { metadata, data } = await models.Keyword.find({}).paginate({ page, perPage });
+  const { q,page = 1, perPage = 20 } = req.query;
+  const query = {};
+  if(q) query.name = new RegExp(_.escapeRegExp(q), 'i');
+  let { metadata, data } = await models.Keyword.find(query).paginate({ page, perPage });
   data = data.map(i => ({
     id: i.id,
     name: i.name || '',

@@ -5,6 +5,7 @@ import Loading from '../components/loading.jsx';
 import { Link } from 'react-router';
 import Paginator from '../components/paginator.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
+import Search from './search.jsx';
 
 //新建的内容
 const addContent = JSON.stringify({
@@ -22,6 +23,7 @@ class Keywords extends React.Component {
 	addContent:addContent,
 	};
 	this.onAddSubmit = this.onAddSubmit.bind(this);	
+    this.returnCurrentSearchArgs = this.returnCurrentSearchArgs.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +37,18 @@ class Keywords extends React.Component {
       const { dispatch } = this.props;
       dispatch(fetchKeywords(nextProps.location.query));
     }
+  }
+
+  returnCurrentSearchArgs() {
+    const { location } = this.props;
+    const { search } = location;
+    const searchArgs = {};
+    search.replace('?', '').split('&').forEach(item => {
+      let key = item.split('=')[0];
+      let value = item.replace(`${key}=`, '');
+      if (key && value) searchArgs[key] = value;
+    });
+    return searchArgs;
   }
   // 删除
   async deleteKeyword(id) {
@@ -114,6 +128,12 @@ class Keywords extends React.Component {
           onClick={() => {
             this.setState({ showAddDiv: true });
           }}
+        />
+        <Search
+          location={location}
+          history={history}
+          searchArgs={this.returnCurrentSearchArgs()}
+          defaultText="搜索关键词..."
         />
         <table className="table table-striped">
           <thead>
