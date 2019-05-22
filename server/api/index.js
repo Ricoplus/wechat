@@ -45,8 +45,8 @@ api.get('/posts', wrap(async (req, res) => {
     const targetBiz = config.rule.page.targetBiz;
     if (targetBiz && targetBiz.length) bizsArr.push(config.targetBiz);
   }
-  if (mainData === 'true') query.readNum = { $exists: true };
-  if (mainData === 'false') query.readNum = { $exists: false };
+  if (mainData === 'true') query.isKeyword = "true";
+  if (mainData === 'false') query.isKeyword = "false";
   if (msgBiz) bizsArr.push(msgBiz.split(','));
 /*
   if (categoryId && /^\w{24}$/.test(categoryId)) {

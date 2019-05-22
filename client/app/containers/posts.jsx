@@ -110,12 +110,12 @@ class Posts extends React.Component {
           const nextQuery = { ...searchArgs, mainData: 'true' };
           const path = assembleUrl(pathname, nextQuery);
           history.push(path);
-        }} label="有阅读量" style={style} />
+        }} label="预存关键词文章" style={style} />
         <RaisedButton {...this.judeMainDataShow('no')} onClick={() => {
           const nextQuery = { ...searchArgs, mainData: 'false' };
           const path = assembleUrl(pathname, nextQuery);
           history.push(path);
-        }} label="无阅读量" style={style} />
+        }} label="非预存关键词文章" style={style} />
         { !count ? '' : <span>共{count}条数据</span> }
       </div>
     );

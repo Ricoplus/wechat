@@ -31,6 +31,8 @@ const Post = new Schema({
   digest: String,
   // 是否抓取失败：文章删除、其他未知原因
   isFail: Boolean,
+  //是否是预存关键词文章
+  isKeyword:Boolean,
   // 公众号 id
   wechatId: String,
   // 上次更新阅读数、点赞数的时间

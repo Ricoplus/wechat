@@ -125,10 +125,9 @@ const getPostBasicInfo = async function (ctx) {
     const sourceUrl = getTarget(/var msg_source_url = '(.*?)';/);
     const cover = getTarget(/var msg_cdn_url = "(.+?)";/);
     const digest = getTarget(/var msg_desc = "(.+?)";/);
-
     return models.Post.findOneAndUpdate(
       { msgBiz, msgMid, msgIdx },
-      { title, link, publishAt, sourceUrl, cover, digest, wechatId },
+      { title, link, publishAt, sourceUrl, cover, digest, wechatId},
       { upsert: true }
     );
   });
@@ -488,10 +487,11 @@ async function savePostsData(postList) {
     const [msgBiz, msgMid, msgIdx] = [__biz, mid, idx];
 
     const [cover, digest, sourceUrl] = [appMsg.cover, appMsg.digest, appMsg.source_url];
+    const isKeyword = false;
 
     return models.Post.findOneAndUpdate(
       { msgBiz, msgMid, msgIdx },
-      { title, link, publishAt, cover, digest, sourceUrl },
+      { title, link, publishAt, cover, digest, sourceUrl,isKeyword },
       { new: true, upsert: true }
     );
   }));
