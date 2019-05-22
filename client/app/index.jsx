@@ -31,7 +31,7 @@ let store = createStore(
 
 import Posts from './containers/posts.jsx';
 import Profiles from './containers/profiles.jsx';
-import Categories from './containers/categories.jsx';
+import Keywords from './containers/keywords.jsx';
 import Doc from './containers/doc.jsx';
 
 class App extends React.Component {
@@ -50,7 +50,7 @@ class App extends React.Component {
             <List>
               <ListItem primaryText="文章" onClick={() => { history.push('/posts'); }} />
               <ListItem primaryText="公众号" onClick={() => { history.push('/profiles'); }} />
-			  <ListItem primaryText="分类" onClick={() => { history.push('/categories'); }} />
+			  <ListItem primaryText="关键词" onClick={() => { history.push('/keywords'); }} />
               <ListItem primaryText="配置" onClick={() => { history.push('/conf'); }} />
             </List>
           </Drawer>
@@ -89,9 +89,7 @@ render(
           <Route path="/profiles" component={Profiles} />
           <Route path="/profiles/:id" component={Doc} />
           <Route path="/profiles/:id/edit" component={Doc} />
-          <Route path="/categories" component={Categories} />
-          <Route path="/categories/:id" component={Doc} />
-          <Route path="/categories/:id/edit" component={Doc} />
+          <Route path="/keywords" component={Keywords} />
           <Route path="/conf" component={Doc} />
           <Route path="/conf/edit" component={Doc} />
         </Route>

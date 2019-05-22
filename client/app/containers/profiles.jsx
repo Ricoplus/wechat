@@ -121,6 +121,7 @@ class Profiles extends React.Component {
   render() {
     let { isFetching, profiles, history, location } = this.props;
     let { search, pathname } = location;
+    console.log("profiles:",profiles,"isFetching:",isFetching)
     if (isFetching || !profiles.data) return <Loading />;
     let metadata = profiles.metadata;
     return (

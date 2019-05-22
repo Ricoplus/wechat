@@ -26,7 +26,7 @@ if (process.env.WS_MODEL_DEBUG === 'false') {
 [
   'Post',
   'Profile',
-  'Category',
+  'Keyword',
   'Comment',
   'ProfilePubRecord',
 ].forEach(function(modelName) {

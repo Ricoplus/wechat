@@ -7,10 +7,10 @@ import {
   RECEIVE_PROFILES,
   REQUEST_PROFILE,
   RECEIVE_PROFILE,
-  REQUEST_CATES,
-  RECEIVE_CATES,
-  REQUEST_CATE,
-  RECEIVE_CATE,
+  REQUEST_KEYWORDS,
+  RECEIVE_KEYWORDS,
+  REQUEST_KEYWORD,
+  RECEIVE_KEYWORD,
   SHOW_MESSAGE,
   CLOSE_MESSAGE,
   REQUEST_CONF,
@@ -22,8 +22,8 @@ const initialState = {
   post: {},
   profiles: {},
   profile: {},
-  cates: {},
-  cate: {},
+  keywords: {},
+  keyword: {},
   isFetching: false,
   message: {
     open: false,
@@ -39,8 +39,8 @@ function reducer(state = initialState, action) {
     case REQUEST_POST:
     case REQUEST_PROFILES:
     case REQUEST_PROFILE:
-    case REQUEST_CATES:
-    case REQUEST_CATE:
+    case REQUEST_KEYWORDS:
+    case REQUEST_KEYWORD:
     case REQUEST_CONF:
       return Object.assign({}, state, {
         isFetching: true
@@ -67,16 +67,16 @@ function reducer(state = initialState, action) {
         isFetching: false,
         profile: action.profile
       };
-    case RECEIVE_CATES:
+    case RECEIVE_KEYWORDS:
       return Object.assign({}, state, {
         isFetching: false,
-        cates: action.cates
+        keywords: action.keywords
       });
-    case RECEIVE_CATE:
+    case RECEIVE_KEYWORD:
       return {
         ...state,
         isFetching: false,
-        cate: action.cate
+        keyword: action.keyword
       };
     case SHOW_MESSAGE:
       return {

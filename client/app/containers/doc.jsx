@@ -6,8 +6,8 @@ import {
   updatePost,
   fetchProfile,
   updateProfile,
-  fetchCate,
-  updateCate,
+  fetchKeyword,
+  updateKeyword,
   fetchConf,
   updateConf,
 } from '../actions';
@@ -32,11 +32,11 @@ class Doc extends React.Component {
       this.updateFn = updateProfile;
       this.stateName = 'profile';
       this.statePath = 'profiles';
-    } else if (pathname.includes('categories')) {
-      this.fetchFn = fetchCate;
-      this.updateFn = updateCate;
-      this.stateName = 'cate';
-      this.statePath = 'categories';
+    } else if (pathname.includes('keywords')) {
+      this.fetchFn = fetchKeyword;
+      this.updateFn = updateKeyword;
+      this.stateName = 'keyword';
+      this.statePath = 'keywords';
     } else if (pathname.includes('conf')) {
       this.fetchFn = fetchConf;
       this.updateFn = updateConf;

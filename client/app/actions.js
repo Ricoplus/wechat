@@ -131,56 +131,56 @@ export function fetchProfile(id) {
   };
 }
 
-export const REQUEST_CATES = 'REQUEST_CATES';
+export const REQUEST_KEYWORDS = 'REQUEST_KEYWORDS';
 
-export function requestCates() {
+export function requestKeywords() {
   return {
-    type: REQUEST_CATES
+    type: REQUEST_KEYWORDS
   };
 }
 
-export const RECEIVE_CATES = 'RECEIVE_CATES';
+export const RECEIVE_KEYWORDS = 'RECEIVE_KEYWORDS';
 
-export function receiveCates(cates) {
+export function receiveKeywords(keywords) {
   return {
-    type: RECEIVE_CATES,
-    cates
+    type: RECEIVE_KEYWORDS,
+    keywords
   };
 }
 
-export function fetchCates(query) {
-  const path = assembleUrl(config.cates, query);
+export function fetchKeywords(query) {
+  const path = assembleUrl(config.keywords, query);
   return function(dispatch) {
-    dispatch(requestCates());
-    return fetch(path).then(res => res.json()).then(cates => {
-      dispatch(receiveCates(cates));
+    dispatch(requestKeywords());
+    return fetch(path).then(res => res.json()).then(keywords => {
+      dispatch(receiveKeywords(keywords));
     });
   };
 }
 
-export const REQUEST_CATE = 'REQUEST_CATE';
+export const REQUEST_KEYWORD = 'REQUEST_KEYWORD';
 
-export function requestCate(id) {
+export function requestKeyword(id) {
   return {
-    type: REQUEST_CATE,
+    type: REQUEST_KEYWORD,
     id
   };
 }
 
-export const RECEIVE_CATE = 'RECEIVE_CATE';
+export const RECEIVE_KEYWORD = 'RECEIVE_KEYWORD';
 
-export function receiveCate(cate) {
+export function receiveKeyword(keyword) {
   return {
-    type: RECEIVE_CATE,
-    cate
+    type: RECEIVE_KEYWORD,
+    keyword
   };
 }
 
-export function fetchCate(id) {
+export function fetchKeyword(id) {
   return function (dispatch) {
-    dispatch(requestCate(id));
-    return fetch(`${config.cate}/${id}`).then(res => res.json()).then(cate => {
-      dispatch(receiveCate(cate));
+    dispatch(requestKeyword(id));
+    return fetch(`${config.keyword}/${id}`).then(res => res.json()).then(keyword => {
+      dispatch(receiveKeyword(keyword));
     });
   };
 }
@@ -244,16 +244,25 @@ export function addProfile(doc) {
   };
 }
 
-// update category
-export async function updateCate(id, doc) {
-  let res = await fetch(`${config.cate}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(doc),
-  });
-  res = res.json();
-  return res;
+// add keyword
+export function addKeyword(doc) {
+  return async dispatch => {
+    let res = await fetch(`${config.keyword}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(doc),
+    });
+    if (res.status === 500) {
+      const message = await res.text();
+      dispatch(showMessage(`错误：${message}`));
+      return;
+    }
+    const body = await res.json();
+    const { state, message } = body;
+    if (state === 1) dispatch(showMessage(`成功：${message}`));
+  };
 }
+
 
 // message
 export const SHOW_MESSAGE = 'SHOW_MESSAGE';

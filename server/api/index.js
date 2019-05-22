@@ -8,7 +8,7 @@ const models = require('../../models');
 const utils = require('../../utils');
 const wrap = require('../wrap');
 const conf = require('./conf');
-const { Category } = models;
+//const { Category } = models;
 
 api.use('/conf', conf);
 
@@ -34,7 +34,7 @@ api.get('/posts', wrap(async (req, res) => {
   // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
   // q - 搜索词
   // sortWay - 排序方式: -updateNumAt, updateNumAt, -publishAt, publishAt
-  const { target, mainData, msgBiz, category: categoryId, sortWay, q, page = 1, perPage = 20 } = req.query;
+  const { target, mainData, msgBiz, sortWay, q, page = 1, perPage = 20 } = req.query;
 
   const query = {};
   // 取各个筛选条件确定的 msgBiz 交集
@@ -48,14 +48,14 @@ api.get('/posts', wrap(async (req, res) => {
   if (mainData === 'true') query.readNum = { $exists: true };
   if (mainData === 'false') query.readNum = { $exists: false };
   if (msgBiz) bizsArr.push(msgBiz.split(','));
-
+/*
   if (categoryId && /^\w{24}$/.test(categoryId)) {
     const category = await models.Category.findById(categoryId);
     if (category && category.msgBizs && category.msgBizs.length) {
       bizsArr.push(category.msgBizs);
     }
   }
-
+*/
   if (bizsArr.length) {
     const msgBizs = _.intersection(...bizsArr);
     // 交集为空，返回给前端空数据
@@ -135,7 +135,7 @@ api.get('/profiles', wrap(async (req, res) => {
   // target = true 表示显示目标抓取的公众号的条目
   // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
   // q - 搜索词
-  const { target, category: categoryId, q, page = 1, perPage = 20 } = req.query;
+  const { target,  q, page = 1, perPage = 20 } = req.query;
 
   const query = {};
   // 取各个筛选条件确定的 msgBiz 交集
@@ -146,14 +146,14 @@ api.get('/profiles', wrap(async (req, res) => {
     const targetBiz = config.rule.profile.targetBiz;
     if (targetBiz && targetBiz.length) bizsArr.push(config.targetBiz);
   }
-
+/*
   if (categoryId && /^\w{24}$/.test(categoryId)) {
     const category = await models.Category.findById(categoryId);
     if (category && category.msgBizs && category.msgBizs.length) {
       bizsArr.push(category.msgBizs);
     }
   }
-
+*/
   if (bizsArr.length) {
     const msgBizs = _.intersection(...bizsArr);
     // 交集为空，返回给前端空数据
@@ -239,50 +239,44 @@ api.post('/profiles', wrap(async (req, res) => {
   });
   res.json({ state: 1, message: '创建公众号成功', data: { id: doc.id } });
 }));
-
-// 新建分类
-api.post('/categories', (req, res, next) => {
-  const { name, msgBizs } = req.query;
-  if (!name || !msgBizs) return next(new Error('请传入正确的参数'));
-  Category.findOne({ name: name }).then(category => {
-    if (category) return next(new Error('已存在同名称分类'));
-    category = new Category({
-      name,
-      msgBizs: msgBizs.split(',')
-    });
-    return category.save();
-  }).then(() => {
-    res.status(201).send('创建分类成功');
-  }).catch(e => {
-    next(e);
+//新建关键词
+api.post('/keywords', wrap(async (req, res) => {
+  const {
+    name,
+  } = req.body;
+  if(!name)throw new Error('请传入关键字');
+  let doc = await models.Keyword.findOne({ name });
+  if (doc) throw new Error('已存在此关键字');
+  doc = await models.Keyword.create({
+    name,
   });
-});
+  res.json({ state: 1, message: '创建关键词成功', data: { id: doc.id } });
+}));
 
-// categories api
-api.get('/categories', wrap(async (req, res) => {
+// keywords api
+api.get('/keywords', wrap(async (req, res) => {
   const { page = 1, perPage = 20 } = req.query;
-  let { metadata, data } = await models.Category.find({}).paginate({ page, perPage });
+  let { metadata, data } = await models.Keyword.find({}).paginate({ page, perPage });
   data = data.map(i => ({
     id: i.id,
     name: i.name || '',
-    msgBizs: i.msgBizs || [],
   }));
   res.json({ metadata, data });
 }));
 
-// show category api
-api.get('/categories/:id', wrap(async (req, res) => {
+// show keyword api
+api.get('/keywords/:id', wrap(async (req, res) => {
   const { id } = req.params;
-  const category = await models.Category.findById(id);
-  res.json({ data: category.toObject() });
+  const keyword = await models.Keyword.findById(id);
+  res.json({ data: keyword.toObject() });
 }));
 
-// update category api
-api.put('/categories/:id', wrap(async (req, res) => {
+// update keyword api
+api.put('/keywords/:id', wrap(async (req, res) => {
   const { id } = req.params;
-  const fields = ['name', 'msgBizs'];
+  const fields = ['name'];
   const doc = utils.extract(req.body, fields);
-  await models.Category.findByIdAndUpdate(id, doc);
+  await models.Keyword.findByIdAndUpdate(id, doc);
   res.json({ state: 1, message: '更新分类成功' });
 }));
 

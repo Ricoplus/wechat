@@ -5,8 +5,8 @@ const config = {
   post: '/api/posts',
   profiles: '/api/profiles',
   profile: '/api/profiles',
-  cates: '/api/categories',
-  cate: '/api/categories',
+  keyword: '/api/keywords',
+  keywords:'/api/keywords',
   conf: '/api/conf',
 };
 
