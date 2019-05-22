@@ -208,14 +208,6 @@ api.put('/profiles/:id', wrap(async (req, res) => {
   await models.Profile.findByIdAndUpdate(id, doc);
   res.json({ state: 1, message: '更新公众号成功' });
 }));
-// profile delete api
-api.delete('/profiles/:id', wrap(async (req, res) => {
-  const { id } = req.params;
-  const doc = await models.Profile.findByIdAndRemove(id);
-  if (!doc) throw new Error('不存在此公众号');
-  res.json({ state: 1, message: '删除公众号成功' });
-}));
-
 // profile add api
 api.post('/profiles', wrap(async (req, res) => {
   // title, msgBiz 必传
@@ -239,6 +231,24 @@ api.post('/profiles', wrap(async (req, res) => {
   });
   res.json({ state: 1, message: '创建公众号成功', data: { id: doc.id } });
 }));
+
+// profile delete api
+api.delete('/profiles/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const doc = await models.Profile.findByIdAndRemove(id);
+  if (!doc) throw new Error('不存在此公众号');
+  res.json({ state: 1, message: '删除公众号成功' });
+}));
+
+
+// Keyword delete api
+api.delete('/keywords/:id', wrap(async (req, res) => {
+  const { id } = req.params;
+  const doc = await models.Keyword.findByIdAndRemove(id);
+  if (!doc) throw new Error('不存在此关键词');
+  res.json({ state: 1, message: '删除关键词成功' });
+}));
+
 //新建关键词
 api.post('/keywords', wrap(async (req, res) => {
   const {

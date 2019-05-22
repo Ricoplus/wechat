@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchKeywords, showMessage, addKeyword } from '../actions';
+import { fetchKeywords, showMessage, addKeyword,deleteKeyword } from '../actions';
 import Loading from '../components/loading.jsx';
 import { Link } from 'react-router';
 import Paginator from '../components/paginator.jsx';
@@ -37,11 +37,11 @@ class Keywords extends React.Component {
     }
   }
   // 删除
- // async deleteKeyword(id) {
- //   const { dispatch } = this.props;
- //   await dispatch(deleteKeyword(id));
- //   setTimeout(() => { location.reload(); }, 300); // 手动刷新页面
- // }
+  async deleteKeyword(id) {
+    const { dispatch } = this.props;
+    await dispatch(deleteKeyword(id));
+    setTimeout(() => { location.reload(); }, 300); // 手动刷新页面
+  }
 
   // 新建提交
   async onAddSubmit() {
@@ -102,7 +102,6 @@ class Keywords extends React.Component {
   render() {
     const { keywords, isFetching, history, location } = this.props;
     const { search, pathname } = location;
-    console.log("keywords:",keywords,"isFetching:",isFetching);
     if (isFetching || !keywords.data) return <Loading />;
 
     const { metadata, data } = keywords;
@@ -120,15 +119,29 @@ class Keywords extends React.Component {
           <thead>
             <tr>
               <th>关键词</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             {
-              data.map(i => (
+              data.map(i => {
+               return( 
                 <tr key={i.id}>
                   <td>{i.name}</td>
+                  <td>
+                      <span
+                        onClick={() => { this.deleteKeyword(i.id); }}
+                        style={{
+                          cursor: 'pointer',
+                          color: '#337ab7'
+                        }}
+                      >
+                        删除
+                      </span>
+                 </td> 
                 </tr>
-              ))
+                );
+                })
             }
           </tbody>
         </table>

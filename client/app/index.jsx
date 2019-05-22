@@ -90,6 +90,7 @@ render(
           <Route path="/profiles/:id" component={Doc} />
           <Route path="/profiles/:id/edit" component={Doc} />
           <Route path="/keywords" component={Keywords} />
+          <Route path="/Keywords/:id" component={Doc} />
           <Route path="/conf" component={Doc} />
           <Route path="/conf/edit" component={Doc} />
         </Route>

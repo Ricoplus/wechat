@@ -208,6 +208,25 @@ export async function updateProfile(id, doc) {
   return res;
 }
 
+// add profile
+export function addProfile(doc) {
+  return async dispatch => {
+    let res = await fetch(`${config.profile}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(doc),
+    });
+    if (res.status === 500) {
+      const message = await res.text();
+      dispatch(showMessage(`错误：${message}`));
+      return;
+    }
+    const body = await res.json();
+    const { state, message } = body;
+    if (state === 1) dispatch(showMessage(`成功：${message}`));
+  };
+}
+
 // delete profile
 export function deleteProfile(id) {
   return async dispatch => {
@@ -225,13 +244,12 @@ export function deleteProfile(id) {
   };
 }
 
-// add profile
-export function addProfile(doc) {
+
+// delete keyword
+export function deleteKeyword(id) {
   return async dispatch => {
-    let res = await fetch(`${config.profile}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(doc),
+    const res = await fetch(`${config.keyword}/${id}`, {
+      method: 'DELETE',
     });
     if (res.status === 500) {
       const message = await res.text();
