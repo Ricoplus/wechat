@@ -34,11 +34,11 @@ api.get('/posts', wrap(async (req, res) => {
   // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
   // q - 搜索词
   // sortWay - 排序方式: -updateNumAt, updateNumAt, -publishAt, publishAt
-  const { mainData, keywordId, sortWay, q, page = 1, perPage = 20 } = req.query;
+  const { mainData, keywordId, msgBiz,sortWay, q, page = 1, perPage = 20 } = req.query;
   const query = {};
   // 取各个筛选条件确定的 keyword 交集
   const msgMidsArr = [];
-
+  const bizsArr = [];
   if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
   /*if (target === 'true') {
     const targetBiz = config.rule.page.targetBiz;
@@ -46,7 +46,12 @@ api.get('/posts', wrap(async (req, res) => {
   }*/
   if (mainData === 'true') query.isKeyword = "true";
   if (mainData === 'false') query.isKeyword = "false";
-  /*
+  if (msgBiz) bizsArr.push(msgBiz.split(','));
+  if(bizsArr.length){
+	const msgBizs = _.intersection(...bizsArr);
+    query.msgBiz = { $in: msgBizs }; 
+  }
+    /*
   if (keyword) {
     let conditions = {name:keyword};
     console.log("conditions:",conditions);

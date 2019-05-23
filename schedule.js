@@ -21,8 +21,9 @@ function fun(){
             if(!docs[i].link||docs[i].link==='') continue;
 			console.log("当前文章链接:",docs[i].link);
             request(docs[i].link, function (error, response, body) {
-                if(error) console.log("爬取网页内容失败 标题:",docs[i].title,error);
-                $ = cheerio.load(body, { decodeEntities: false });
+                if(error) {console.log("获取网页信息失败"+error);}
+                else{
+                    $ = cheerio.load(body, { decodeEntities: false });
                 let content = $('#js_content').text() || '';
                 content = content.trim();
                 if(pageConfig.isSavePostContent){
@@ -33,7 +34,7 @@ function fun(){
 					  { msgBiz, msgMid, msgIdx },
 					  { content },
                       function(err){
-                        if (err) return console.log("保存正文失败"+err);
+                        if (err) console.log("保存正文失败"+err);
 		                console.log("保存正文成功 msgMid: "+msgMid+"    title:"+docs[i].title);
                       },
 					  { upsert: true }
@@ -42,7 +43,7 @@ function fun(){
                 if (!error && response.statusCode == 200) {
                 	//2.获得关键字列表
                     models.Keyword.find({},{name:1},function(error,keydocs){
-                        if(error)console.log("获得关键字列表出错:"+error);
+                        if(error){console.log("获得关键字列表出错:"+error);return;}
                 		//3.遍历关键字列表,如果当前内容符合条件则存入对应关键字下
                         for(let j = 0;j<keydocs.length;j++){
                             if(keydocs[j].name.length<2) {consonle.log("当前关键字过短:"+keydocs[j].name);continue;}
@@ -69,6 +70,7 @@ function fun(){
                     })
                     
                 }
+              }
             });
         }
     });
