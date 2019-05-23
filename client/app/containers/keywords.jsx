@@ -64,6 +64,10 @@ class Keywords extends React.Component {
     let doc;
     try {
       doc = JSON.parse(addContent);
+      if(doc.name.length<2){
+        dispatch(showMessage('关键字至少两个字符以上'));
+        return;
+      }
     } catch (e) {
       dispatch(showMessage('输入解析错误，请检查'));
       return;
@@ -151,7 +155,7 @@ class Keywords extends React.Component {
                 <tr key={i.id}>
                   <td>{i.name}</td>
                   <td>{i.articles?i.articles.length:'0'}</td>
-                  <td><Link to={`/posts`}>详情</Link></td>
+                  <td><Link to={`/posts?mainData=true&keywordId=${i.id}`}>详情</Link></td>
                   <td>
                       <span
                         onClick={() => { this.deleteKeyword(i.id); }}

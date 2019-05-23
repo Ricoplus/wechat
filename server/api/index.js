@@ -34,37 +34,49 @@ api.get('/posts', wrap(async (req, res) => {
   // category - 根据存储在数据库的 category id 筛选特定公众号组的内容
   // q - 搜索词
   // sortWay - 排序方式: -updateNumAt, updateNumAt, -publishAt, publishAt
-  const { target, mainData, msgBiz, sortWay, q, page = 1, perPage = 20 } = req.query;
-
+  const { mainData, keywordId, sortWay, q, page = 1, perPage = 20 } = req.query;
   const query = {};
-  // 取各个筛选条件确定的 msgBiz 交集
-  const bizsArr = [];
+  // 取各个筛选条件确定的 keyword 交集
+  const msgMidsArr = [];
 
   if (q) query.title = new RegExp(_.escapeRegExp(q), 'i');
-  if (target === 'true') {
+  /*if (target === 'true') {
     const targetBiz = config.rule.page.targetBiz;
     if (targetBiz && targetBiz.length) bizsArr.push(config.targetBiz);
-  }
+  }*/
   if (mainData === 'true') query.isKeyword = "true";
   if (mainData === 'false') query.isKeyword = "false";
-  if (msgBiz) bizsArr.push(msgBiz.split(','));
-/*
-  if (categoryId && /^\w{24}$/.test(categoryId)) {
-    const category = await models.Category.findById(categoryId);
-    if (category && category.msgBizs && category.msgBizs.length) {
-      bizsArr.push(category.msgBizs);
-    }
-  }
-*/
-  if (bizsArr.length) {
-    const msgBizs = _.intersection(...bizsArr);
-    // 交集为空，返回给前端空数据
-    if (!msgBizs.length) {
-      return res.json(nullRes(page, perPage));
-    }
-    query.msgBiz = { $in: msgBizs };
+  /*
+  if (keyword) {
+    let conditions = {name:keyword};
+    console.log("conditions:",conditions);
+    models.Keyword.find(conditions,{},function(err,docs){
+        if(!err&&docs[0]&&docs[0].articles&&docs[0].articles.length){
+            console.log("docs[0].articles:",docs[0].articles);
+            msgMidsArr.push(docs[0].articles);
+        }
+    });
+  }*/ 
+  if (keywordId) {
+    let keywords = await models.Keyword.findById(keywordId);
+ 	if (keywords && keywords.articles&& keywords.articles.length) {
+			msgMidsArr.push(keywords.articles);
+    }  
   }
 
+  if(keywordId&&msgMidsArr.length===0){
+        console.log("keyword not exists msgMidsArr.length:",msgMidsArr.length);
+        return res.json(nullRes(page, perPage));
+  }
+  if (msgMidsArr.length) {
+    const msgBizs = _.intersection(...msgMidsArr);
+    console.log("msgBizs:",msgBizs);
+    // 交集为空，返回给前端空数据
+    if (!msgBizs.length) {
+        return res.json(nullRes(page, perPage));
+    }
+    query.msgMid = { $in: msgBizs };
+  }
   let sortWayResult;
   switch (sortWay) {
     case '-updateNumAt':
@@ -272,6 +284,7 @@ api.get('/keywords', wrap(async (req, res) => {
   data = data.map(i => ({
     id: i.id,
     name: i.name || '',
+    articles:i.articles,
   }));
   res.json({ metadata, data });
 }));
