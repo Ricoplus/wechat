@@ -256,6 +256,31 @@ api.delete('/profiles/:id', wrap(async (req, res) => {
 // Keyword delete api
 api.delete('/keywords/:id', wrap(async (req, res) => {
   const { id } = req.params;
+  //待置为false的msgMid
+  const msgMidsArr=[];
+  let keywords = await models.Keyword.findById(id);
+  if (keywords && keywords.articles&& keywords.articles.length) {
+			msgMidsArr.push(keywords.articles);
+  }  
+
+  if(msgMidsArr.length!=0){
+    console.log("msgMidsArr[0].length",msgMidsArr[0].length);
+    for(let i = 0;i<msgMidsArr[0].length;i++){
+	    let msgMid=msgMidsArr[0][i];
+	    let isKeyword =false;
+        const data = models.Post.findOneAndUpdate(
+            {msgMid},
+            {isKeyword},
+            { new: true, upsert: true },
+            function(error){
+                if(error) {
+                    console.log(error);
+                }
+            },
+         );
+       console.log('msgMidsArr[0][',i,']:', msgMidsArr[0][i]);
+    }
+  }
   const doc = await models.Keyword.findByIdAndRemove(id);
   if (!doc) throw new Error('不存在此关键词');
   res.json({ state: 1, message: '删除关键词成功' });
