@@ -1,0 +1,54 @@
+{
+  "serverPort": 8104,
+  "anyproxy": {
+    "port": 8101,
+    "webInterface": {
+      "enable": true,
+      "webPort": 8102
+    },
+    "forceProxyHttps": true,
+    "wsIntercept": false,
+    "silent": false
+  },
+  "mongodb": {
+    "db": "mongodb://127.0.0.1:27017/wechat_spider"
+  },
+  "redis": {
+    "port": 6379,
+    "host": "127.0.0.1",
+    "POST_LIST_KEY": "wechat_spider:post_list",
+    "PROFILE_LIST_KEY": "wechat_spider:profile_list"
+  },
+  "rule": {
+    "page": {
+      "disable": false,
+      "jumpInterval": 2,
+      "minTime": "1990-11-30T16:00:00.000Z",
+      "maxTime": "2023-02-27T16:00:00.000Z",
+      "isCrawlExist": false,
+      "crawlExistInterval": 259200000,
+      "targetBiz": [],
+      "isSavePostContent": false,
+      "saveContentType": "text"
+    },
+    "profile": {
+      "disable": false,
+      "jumpInterval": 5,
+      "minTime": "1990-01-31T16:00:00.000Z",
+      "maxUpdatedAt": "2024-11-30T16:00:00.000Z",
+      "targetBiz": []
+    },
+    "isCrawlComments": false,
+    "isReplaceImg": true,
+    "isReplacePostBody": false
+  },
+  "mp": {
+    "cookie": "",
+    "token": ""
+  },
+  "proxyBasicAuth": {
+    "enable": false,
+    "user": "admin",
+    "password": "12"
+  }
+}

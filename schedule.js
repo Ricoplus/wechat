@@ -1,7 +1,9 @@
 var request = require('request');
 const cheerio = require('cheerio');
-const models = require('../../models');
-const config = require('../../config');
+const models = require('./models/');
+const config = require('./my_config.json');
+var schedule = require('node-schedule');
+
 
 const {
   rule: ruleConfig,
@@ -71,4 +73,26 @@ function fun(){
         }
     });
 }
-fun();
+
+function scheduleRecurrenceRule(){
+
+    let rule = new schedule.RecurrenceRule();
+    // rule.dayOfWeek = 2;
+    // rule.month = 3;
+    // rule.dayOfMonth = 1;
+    // rule.hour = 1;
+    // rule.minute = 42;
+    //每5s执行一次
+	let times = [1,6,11,16,21,26,31,36,41,46,51,56];
+    rule.second = times;
+    
+    console.log('定时任务启动' + new Date());
+    schedule.scheduleJob(rule, function(){
+	   fun();
+       console.log('scheduleRecurrenceRule:' + new Date());
+    });
+   
+}
+scheduleRecurrenceRule();
+
+
