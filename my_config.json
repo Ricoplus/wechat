@@ -28,7 +28,7 @@
       "isCrawlExist": false,
       "crawlExistInterval": 259200000,
       "targetBiz": [],
-      "isSavePostContent": false,
+      "isSavePostContent": true,
       "saveContentType": "text"
     },
     "profile": {

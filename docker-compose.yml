@@ -20,9 +20,5 @@ services:
       - mongo
   redis:
     image: redis:alpine
-    volume:
-      - "${REDIS_PATH}:/data"
   mongo:
     image: mongo:3.6
-    vulume:
-      - "${MONGO_PATH}:/data/db"  
